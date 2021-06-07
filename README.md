@@ -16,7 +16,7 @@ To run the VM, you'd need [Deno](https://deno.land 'Deno'). I will add supports 
 ```
 $ clear && deno run -qA ./src/index.ts
 ```
-You can also execute the [`run`](https://github.com/xirxo/x16_x/blob/main/run.sh) file.
+You can also execute the [`run`](https://github.com/xirxo/x16_x/blob/main/run) file.
 ```
 $ ./run
 ```
