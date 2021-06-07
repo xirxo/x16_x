@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+clear
+
+# Check for `deno`
+if ! command -v deno &> /dev/null
+then
+    printf "(\e[31merror\e[0m): \`deno\` not found\n"
+    printf "(\e[31merror\e[0m): Exiting\n"
+    exit
+fi
+
+# Run the VM
+printf "(\e[32minfo\e[0m): Running\n"
+sleep 1
+clear
+
+deno run -qA ./src/index.ts
