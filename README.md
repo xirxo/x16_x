@@ -3,7 +3,7 @@
 
 # Getting started
 ## Prerequisite
-You'd need [`deno`](https://deno.land 'Deno') and [`git`](https://git-scm.org 'Git')
+You'd need [`deno`](https://deno.land 'Deno') and [`git`](https://git-scm.org 'Git').
 
 ## Cloning
 To clone this project to your local machine, simply use Git.
