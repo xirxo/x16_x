@@ -122,7 +122,6 @@ export class CPU {
     }
 
     execute(instruction) {
-        console.log(`Instruction: 0x${instruction}`);
         switch (instruction) {
             case instructions.MOV_LIT_REG: {
                 const literal = this.fetch16();
@@ -143,14 +142,14 @@ export class CPU {
                 const registerFrom = this.fetchRegisterIndex();
                 const address = this.fetch16();
                 const value = this.registers.getUint16(registerFrom);
-                this.memory.setUint16(address, value);
+                this.mem.setUint16(address, value);
                 return;
             }
         
             case instructions.MOV_MEM_REG: {
                 const address = this.fetch16();
                 const registerTo = this.fetchRegisterIndex();
-                const value = this.memory.getUint16(address);
+                const value = this.mem.getUint16(address);
                 this.registers.setUint16(registerTo, value);
                 return;
             }
@@ -208,18 +207,25 @@ export class CPU {
                 this.setRegister('ip', address);
                 return;
             }
+
             case instructions.RET: {
                 this.popState();
                 return;
             }
 
-        default:
-            throw new Error(`[x16_x]: [CPU]: Invalid instructions: ${instruction}`);
+            case instructions.HLT: {
+                return true;
+            }
         }    
     }
 
     step() {
         const inst = this.fetch();
         return this.execute(inst);
+    }
+
+    run() {
+        const halt = this.step();
+        if (!halt) setTimeout(() => this.run());
     }
 }

@@ -25,5 +25,8 @@ export const instructions: Instructions = {
     CAL_REG: 0x5F,
 
     // Return
-    RET: 0x60
+    RET: 0x60,
+
+    //
+    HLT: 0xFF
 };

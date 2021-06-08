@@ -11,4 +11,5 @@ export interface Instructions {
     CAL_LIT: number;
     CAL_REG: number;
     RET: number;
+    HLT: number;
 }
