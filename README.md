@@ -48,3 +48,20 @@ Currently, this is not possible.
 |---------------|-----------|----------|
 | Push literal  | `0x17`    | N/A      |
 | Push register | `0x18`    | N/A      |
+
+## Popping values
+| Instructions     | Hex value | Assembly |
+|------------------|-----------|----------|
+| Pop              | `0x1A`    | N/A      |
+
+## Calling values
+| Instructions     | Hex value | Assembly |
+|------------------|-----------|----------|
+| Calling literal  | `0x5E`    | N/A      |
+| Calling register | `0x5F`    | N/A      |
+
+## Others
+| Instructions | Hex value | Assembly |
+|--------------|-----------|----------|
+| Return       | `0x60`    | N/A      |
+| Halt         | `0xFF`    | N/A      |

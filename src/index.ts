@@ -4,16 +4,20 @@ const IP = 0;
 const ACC = 1;
 const R1 = 2;
 
+// Create a new MemoryMapper instance
 const MM = new MemoryMapper();
 
-const memory = createMemory(256*256);
+// Create memory
+// A lot of them
+const memory = createMemory(256 * 256);
 MM.map(memory, 0, 0xffff);
 
 // Map 0xFF bytes of the address space to an "output device" - just stdout
 MM.map(createScreenDevice(), 0x3000, 0x30ff, true);
 
+// Create a writable bytes where we will insert our instruction
+// And a CPU instance
 const writableBytes = new Uint8Array(memory.buffer);
-
 const cpu = new CPU(MM);
 let i = 0;
 
@@ -105,4 +109,5 @@ writableBytes[i++] = (loopStart & 0x00ff);
 // otherwise return from the function
 writableBytes[i++] = instructions.RET;
 
+// Run our CPU
 cpu.run();

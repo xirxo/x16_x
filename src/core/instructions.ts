@@ -27,6 +27,6 @@ export const instructions: Instructions = {
     // Return
     RET: 0x60,
 
-    //
+    // Halt
     HLT: 0xFF
 };
