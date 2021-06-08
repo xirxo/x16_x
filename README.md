@@ -23,3 +23,28 @@ $ ./run
 
 ## Targetting
 Currently, this is not possible.
+
+# Instructions
+## Moving values
+| Instructions                | Hex value | Assembly |
+|-----------------------------|-----------|----------|
+| Moving literal to register  | `0x10`    | N/A      |
+| Moving register to register | `0x11`    | N/A      |
+| Moving register to memory   | `0x12`    | N/A      |
+| Moving memory to register   | `0x13`    | N/A      |
+
+## Adding values
+| Instructions                | Hex value | Assembly |
+|-----------------------------|-----------|----------|
+| Adding register to register | `0x14`    | N/A      |
+
+## Conditional jumps
+| Instructions      | Hex value | Assembly |
+|-------------------|-----------|----------|
+| Jump if not equal | `0x15`    | N/A      |
+
+## Pushing values
+| Instructions  | Hex value | Assembly |
+|---------------|-----------|----------|
+| Push literal  | `0x17`    | N/A      |
+| Push register | `0x18`    | N/A      |
