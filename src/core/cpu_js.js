@@ -1,7 +1,10 @@
 import { createMemory } from './create-mem.ts';
 import { instructions } from './instructions.ts';
 
-export class CPU {
+/**
+ * @deprecated Use CPU from cpu.ts instead
+ */
+export class CPU_JS {
     stackSize = 0;
     registerNames = ['ip', 'acc','r1', 'r2', 'r3', 'r4','r5', 'r6', 'r7', 'r8', 'sp', 'fp'];
     registers = createMemory(this.registerNames.length * 2);
