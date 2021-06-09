@@ -1,39 +1,41 @@
-import { createMemory } from './create-mem.ts';
-import { instructions } from './instructions.ts';
+import { instructions, createMemory, MemoryMapper } from '../../mod.ts';
 
-/**
- * @deprecated Use CPU from cpu.ts instead
- */
-export class CPU_JS {
-    stackSize = 0;
-    registerNames = ['ip', 'acc','r1', 'r2', 'r3', 'r4','r5', 'r6', 'r7', 'r8', 'sp', 'fp'];
-    registers = createMemory(this.registerNames.length * 2);
-    registerMap = this.registerNames.reduce((map, name, i) => {
-        map[name] = i * 2;
-        return map;
-    }, {});
+export class CPU {
+    private mem: MemoryMapper;
+    private stackSize: number;
+    private registerNames: string[];
+    private registers: DataView;
+    private registerMap: Record<string, number>;
 
-    constructor(mem) {
-        this.mem = mem;
+    constructor(memory: MemoryMapper) {
+        this.mem = memory;
+        this.stackSize = 0;
+        this.registerNames = ['ip', 'acc','r1', 'r2', 'r3', 'r4','r5', 'r6', 'r7', 'r8', 'sp', 'fp'];
+        this.registers = createMemory(this.registerNames.length * 2);
+        this.registerMap = this.registerNames.reduce((map: Record<string, number>, name: string, i: number) => {
+            map[name] = i * 2;
+            return map;
+        }, {});
     }
 
-    debug() {
-        this.registerNames.forEach(name =>
+    // A debug method to view data of all of our registers
+    public debug(): void {
+        return this.registerNames.forEach(name =>
             console.log(`${name}: 0x${this.getRegister(name).toString(16).padStart(4, '0')}`)
         );
-
-        console.log('\n');
     }
 
-    view(add, n = 8) {
+    // A view method to view our current memory
+    public view(add: number, n = 8): void {
         const next = Array.from({ length: n }, (_, i) =>
             this.mem.getUint8(add + i)
         ).map(v => `0x${v.toString(16).padStart(2, '0')}`);
 
-        console.log(`${add.toString(16).padStart(2, '0')}: ${next.join(' ')}`);
+        return console.log(`${add.toString(16).padStart(2, '0')}: ${next.join(' ')}`);
     }
 
-    getRegister(name) {
+    // Get a specific register's value
+    public getRegister(name: string) {
         if (!(name in this.registerMap)) {
             throw new Error(`[x16_x]: [CPU]: No such register: ${name}`);
         }
@@ -41,7 +43,8 @@ export class CPU_JS {
         return this.registers.getUint16(this.registerMap[name]);
     }
 
-    setRegister(name, value) {
+    // Set a specific register to a specific value
+    public setRegister(name: string, value: number): void {
         if (!(name in this.registerMap)) {
             throw new Error(`[x16_x]: [CPU]: No such register: ${name}`);
         }
@@ -49,7 +52,8 @@ export class CPU_JS {
         return this.registers.setUint16(this.registerMap[name], value);
     }
 
-    fetch() {
+    // Fetch the 8 bit value of instruction pointer
+    public fetch() {
         const next = this.getRegister('ip');
         const now = this.mem.getUint8(next);
 
@@ -57,7 +61,8 @@ export class CPU_JS {
         return now;
     }
 
-    fetch16() {
+    // Fetch the 16 bit value of instruction pointer
+    public fetch16() {
         const next = this.getRegister('ip');
         const now = this.mem.getUint16(next);
 
@@ -65,21 +70,24 @@ export class CPU_JS {
         return now;
     }
 
-    push(value) {
+    // Push value to stack
+    public push(value: number): void {
         const adrr = this.getRegister('sp');
         this.mem.setUint16(adrr, value);
         this.setRegister('sp', adrr - 2);
         this.stackSize += 2;
     }
 
-    pop() {
+    // Pop or remove value from stack
+    public pop(): number {
         const adrr = this.getRegister('sp') + 2;
         this.setRegister('sp', adrr);
         this.stackSize -= 2;
         return this.mem.getUint16(adrr);
     }
 
-    pushState() {
+    // Push states to stack
+    public pushState(): void {
         this.push(this.getRegister('r1'));
         this.push(this.getRegister('r2'));
         this.push(this.getRegister('r3'));
@@ -95,7 +103,8 @@ export class CPU_JS {
         this.stackSize = 0;
     }
 
-    popState() {
+    // Pop states from stack
+    public popState(): void {
         const fp = this.getRegister('fp');
         this.setRegister('sp', fp);
     
@@ -120,12 +129,15 @@ export class CPU_JS {
         this.setRegister('fp', fp + stackSize);
     }
 
-    fetchRegisterIndex() {
+    // Get the index of register
+    public fetchRegisterIndex(): number {
         return (this.fetch() % this.registerNames.length) * 2;
     }
 
-    execute(instruction) {
+    // Execute instructions
+    public execute(instruction: number): true | void {
         switch (instruction) {
+            // Move from literal to register
             case instructions.MOV_LIT_REG: {
                 const literal = this.fetch16();
                 const register = this.fetchRegisterIndex();
@@ -133,6 +145,7 @@ export class CPU_JS {
                 return;
             }
         
+            // Move from register to register
             case instructions.MOV_REG_REG: {
                 const registerFrom = this.fetchRegisterIndex();
                 const registerTo = this.fetchRegisterIndex();
@@ -141,6 +154,7 @@ export class CPU_JS {
                 return;
             }
         
+            // Move from register to memory
             case instructions.MOV_REG_MEM: {
                 const registerFrom = this.fetchRegisterIndex();
                 const address = this.fetch16();
@@ -149,6 +163,7 @@ export class CPU_JS {
                 return;
             }
         
+            // Move from memory to register
             case instructions.MOV_MEM_REG: {
                 const address = this.fetch16();
                 const registerTo = this.fetchRegisterIndex();
@@ -157,6 +172,7 @@ export class CPU_JS {
                 return;
             }
         
+            // Add register to register
             case instructions.ADD_REG_REG: {
                 const r1 = this.fetchRegisterIndex();
                 const r2 = this.fetchRegisterIndex();
@@ -166,6 +182,7 @@ export class CPU_JS {
                 return;
               }
 
+            // Conditional jump
             case instructions.JMP_NOT_EQ: {
                 const value = this.fetch16();
                 const address = this.fetch16();
@@ -177,18 +194,21 @@ export class CPU_JS {
                 return;
             }
 
+            // Push literal
             case instructions.PSH_LIT: {
                 const value = this.fetch16();
                 this.push(value);
                 return;
             }
 
+            // Push register
             case instructions.PSH_REG: {
                 const registerIndex = this.fetchRegisterIndex();
                 this.push(this.registers.getUint16(registerIndex));
                 return;
             }
 
+            // Pop value
             case instructions.POP: {
                 const registerIndex = this.fetchRegisterIndex();
                 const value = this.pop();
@@ -196,6 +216,7 @@ export class CPU_JS {
                 return;
             }
 
+            // Call literal
             case instructions.CAL_LIT: {
                 const address = this.fetch16();
                 this.pushState();
@@ -203,6 +224,7 @@ export class CPU_JS {
                 return;
             }
 
+            // Call register
             case instructions.CAL_REG: {
                 const registerIndex = this.fetchRegisterIndex();
                 const address = this.registers.getUint16(registerIndex);
@@ -211,24 +233,31 @@ export class CPU_JS {
                 return;
             }
 
+            // Return
             case instructions.RET: {
                 this.popState();
                 return;
             }
 
+            // Halt
             case instructions.HLT: {
                 return true;
             }
-        }    
+        }
+
+        return;
     }
 
-    step() {
+    // Fetch then execute
+    public step(): true | void {
         const inst = this.fetch();
         return this.execute(inst);
     }
 
-    run() {
+    // Run the CPU
+    public run(): void {
         const halt = this.step();
         if (!halt) setTimeout(() => this.run());
+        return;
     }
 }

@@ -1,7 +1,13 @@
-export * from './core/cpu_js.js';
-export * from './core/create-mem.ts';
-export * from './core/instructions.ts';
-export * from './core/screen.ts';
-export * from './core/memory.js';
-export * from './core/screen.ts';
-export * from './core/cpu.ts';
+// CPU
+export * from './core/cpu/cpu.dep.js';
+export * from './core/cpu/cpu.ts';
+
+// Memory
+export * from './core/memory/create-mem.ts';
+export * from './core/memory/memory.js';
+
+// Instruction set
+export * from './core/instruction/instructions.ts';
+
+// Screen
+export * from './core/screen/screen.ts';

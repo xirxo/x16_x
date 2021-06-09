@@ -50,9 +50,7 @@ for (let x = 3; x <= 15; x += 2) {
     writeCharToScreen(' ', 0xff, 0);
 
     for (let index = 0; index <= 0xff; index++) {
-        const command = (index % 2 === boldValue)
-        ? 0x01  // In bold
-        : 0x02; // Regular
+        const command = (index % 2 === boldValue) ? 0x01 : 0x02;
         const char = (index % x === 0) ? ' ' : '+';
         writeCharToScreen(char, command, index);
     }

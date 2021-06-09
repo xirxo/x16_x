@@ -1,4 +1,4 @@
-import { Instructions } from '../../typings/index.d.ts';
+import { Instructions } from '../../../typings/index.d.ts';
 
 export const instructions: Instructions = {
     // Moving values
