@@ -1,0 +1,3 @@
+[submodule "src/core/assembler"]
+	path = src/core/assembler
+	url = https://github.com/xirxo/Hogen

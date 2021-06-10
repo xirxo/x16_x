@@ -1,6 +1,9 @@
 # x16_x
 💻 A simple 16-bit virtual machine
 
+# What's new?
+This project has merged with [Hogen](https://github.com/xirxo/Hogen 'Hogen')!
+
 # Getting started
 ## Prerequisite
 You'll need [`deno`](https://deno.land 'Deno') and [`git`](https://git-scm.org 'Git').
